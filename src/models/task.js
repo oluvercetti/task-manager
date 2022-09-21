@@ -10,13 +10,14 @@ const taskSchema = new mongoose.Schema( {
 
     completed: {
         type: Boolean,
-        required: true
-    }
-})
+        default: false,
+    },
 
-taskSchema.pre('save', function (next) {
-    const task = this
-    next()
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'User'
+    }
 })
 
 const Task = mongoose.model('Task', taskSchema)
