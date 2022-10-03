@@ -21,10 +21,31 @@ router.post('/tasks', auth, async (req, res) => {
 })
 
 router.get('/tasks', auth, async (req, res) => {
+    const match = {}
+    const limit = parseInt(req.query.limit) || 3
+    const page = req.query.page > 1 ? (parseInt(req.query.page) - 1) * limit : 0 //this is my implementation
+    const sort = {}
+
+    if (req.query.completed) {
+        match.completed = req.query.completed === 'true'
+    }
+
+    if (req.query.sortBy) {
+        const parts = req.query.sortBy.split(':')
+        sort[parts[0]] = parts[1] === 'desc' ? -1 : 1
+    }
     try {
         // const tasks = await Task.find({owner: req.user._id}) // this is one way to do it
 
-        await req.user.populate('tasks') // this is the other way to get it done execPopulate has been removed from the docs
+        await req.user.populate({
+            path: 'tasks',
+            match,
+            options: {
+                limit,
+                skip: page,
+                sort
+            }
+        }) // this is the other way to get it done execPopulate has been removed from the docs
         res.send(req.user.tasks)
     } catch (err) {
         res.status(500).send(err)   
