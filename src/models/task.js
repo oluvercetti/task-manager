@@ -1,6 +1,5 @@
 
 const mongoose = require('mongoose')
-const validator = require('validator')
 
 const taskSchema = new mongoose.Schema( {
     description: {
@@ -18,6 +17,8 @@ const taskSchema = new mongoose.Schema( {
         required: true,
         ref: 'User'
     }
+}, {
+    timestamps: true
 })
 
 const Task = mongoose.model('Task', taskSchema)
