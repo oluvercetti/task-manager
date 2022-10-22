@@ -3,7 +3,8 @@ const User = require('../models/user');
 
 const auth = async (req, res, next) => {
     try {
-        const decoded = jwt.verify(req.header("vercetti-token"), process.env.TOKEN_SECRET_KEY)
+        const token = req.header("vercetti-token")
+        const decoded = jwt.verify(token, process.env.TOKEN_SECRET_KEY)
         const user = await User.findOne({ _id: decoded._id, 'tokens.token': token})
         
 
